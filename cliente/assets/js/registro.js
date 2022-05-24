@@ -52,5 +52,4 @@ const registrarUsuario = (email, nombre, pass, exp, espec, foto) => {
         return resp;
     });
 
-
 };
