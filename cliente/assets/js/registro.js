@@ -8,23 +8,71 @@ const txtExp = document.getElementById('txtExp');
 const txtEspec = document.getElementById('txtEspec');
 const fotoPerfil = document.getElementById('fotoPerfil');
 
+const faltaEmail = document.getElementById('faltaEmail');
+const faltaNombre = document.getElementById('faltaNombre');
+const faltaPass = document.getElementById('faltaPass');
+const faltaPass2 = document.getElementById('faltaPass2');
+const faltaExp = document.getElementById('faltaExp');
+const faltaEspec = document.getElementById('faltaEspec');
+const faltaFoto = document.getElementById('faltaFoto');
 
 btnRegistro.addEventListener('click', async (e) => {
-    //e.preventDefault();
+    e.preventDefault();
+    let falta = false;
+    
     const email = txtEmail.value;
     const nombre = txtNombre.value;
     const password = txtPass.value;
+    const password2 = txtPass2.value;
     const experiencia = txtExp.value;
     const especialidad = txtEspec.value;
     const foto = fotoPerfil.files[0];
 
-    let registrado = await registrarUsuario(email, nombre, password, experiencia, especialidad, foto);
-    //console.log('Después del await');
-    if(registrado){
-        console.log(registrado);
-    }else {
-        console.log('No me llega el mensaje');
-    }
+    if (!isEmail(email)) {
+        falta = true;
+        faltaEmail.innerText = "Formato de correo incorrecto";
+    }else faltaEmail.innerHTML = "&nbsp;";
+
+    if(nombre == '') {
+        falta = true;
+        faltaNombre.innerText = "Falta nombre";
+    } else faltaNombre.innerHTML = "&nbsp;";
+
+    if(password.length < 4) {
+        falta = true;
+        faltaPass.innerText = "Falta una contraseña. Debe ser mayor a 4 caracteres";
+    } else faltaPass.innerHTML = "&nbsp;";
+
+    if(password != password2) {
+        falta = true;
+        faltaPass2.innerText = "Contraseñas no coinciden";
+    } else faltaPass2.innerHTML = "&nbsp;";
+
+    if(experiencia == '') {
+        falta = true;
+        faltaExp.innerText = "Falta experiencia";
+    } else faltaExp.innerHTML = "&nbsp;";
+
+    if(especialidad == '') {
+        falta = true;
+        faltaEspec.innerText = "Falta especialidad";
+    } else faltaEspec.innerHTML = "&nbsp;";
+
+    if(!foto) {
+        falta = true;
+        faltaFoto.innerText = "Falta una foto de perfil";
+    } else faltaFoto.innerHTML = "&nbsp;";
+    
+
+    if(!falta){
+        let registrado = await registrarUsuario(email, nombre, password, experiencia, especialidad, foto);
+        //console.log('Después del await');
+        if(registrado){
+            console.log(registrado);
+        }else {
+            console.log('No me llega el mensaje');
+        }
+    };
 });
 
 
@@ -51,4 +99,15 @@ const registrarUsuario = (email, nombre, pass, exp, espec, foto) => {
     
     return registro;
 
+};
+
+//https://stackoverflow.com/questions/60737672/email-regex-pattern-in-nodejs
+function isEmail(email){
+    var emailFormat=/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+    if(email !== '' && email.match(emailFormat)){
+        return true;
+    }
+    else{
+        return false;
+    }
 };

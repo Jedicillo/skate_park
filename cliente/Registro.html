@@ -4,51 +4,59 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Skate Park</title>
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/estilos.css" />
   </head>
   <body>
     <h1>Skate Park</h1>
 
-    <div class="py-4">
+    <div class="container">
       <h2>Registro</h2>
-      <hr class="w-50" />
+      <hr class="w-80" />
 
       <form id="formulario">
-        <div class="form-group row w-50 m-auto">
-          <div class="form-group col-12 col-sm-6">
+        <div class="form-group">
+          <div class="form-group col-sm-12 col-lg-6">
             <label>Email</label>
-            <input type="email" class="form-control m-auto" id="txtEmail" value="correo" />
+            <input type="email" class="form-control m-auto" id="txtEmail" value="correo" required />
+            <span id="faltaEmail" class="faltador">&nbsp;</span>
           </div>
-          <div class="form-group col-12 col-sm-6">
+          <div class="form-group col-sm-12 col-lg-6">
             <label>Nombre</label>
-            <input class="form-control m-auto" id="txtNombre" value="nombre" />
+            <input class="form-control m-auto" id="txtNombre" value="nombre" required/>
+            <span id="faltaNombre" class="faltador">&nbsp;</span>
           </div>
-          <div class="form-group col-12 col-sm-6">
+          <div class="form-group col-sm-12 col-lg-6">
             <label>Password</label>
-            <input type="password" class="form-control m-auto" id="txtPass" value="pass" />
+            <input type="password" class="form-control m-auto" id="txtPass" value="pass" required />
+            <span id="faltaPass" class="faltador">&nbsp;</span>
           </div>
-          <div class="form-group col-12 col-sm-6">
+          <div class="form-group col-sm-12  col-lg-6">
             <label>Repita la password</label>
-            <input type="password" class="form-control m-auto" id="txtPass2" value="pass" />
+            <input type="password" class="form-control m-auto" id="txtPass2" value="pass" required/>
             <label id="veriPass hidden"></label>
+            <span id="faltaPass2" class="faltador">&nbsp;</span>
           </div>
-          <div class="form-group col-12 col-sm-6">
+          <div class="form-group col-sm-12  col-lg-6">
             <label>Años de experiencia</label>
-            <input class="form-control m-auto" id="txtExp" value="12" />
+            <input class="form-control m-auto" id="txtExp" value="12" required />
+            <span id="faltaExp" class="faltador">&nbsp;</span>
           </div>
-          <div class="form-group col-12 col-sm-6">
+          <div class="form-group col-sm-12  col-lg-6">
             <label>Especialidad</label>
-            <input class="form-control m-auto" id="txtEspec" value="espec" />
+            <input class="form-control m-auto" id="txtEspec" value="espec" required />
+            <span id="faltaEspec" class="faltador">&nbsp;</span>
           </div>
-          <div class="form-group col-12 col-sm-12">
+          <div class="form-group col-lg-12">
             <label>Foto de perfil</label>
-            <input type="file" id="fotoPerfil" />
+            <input type="file" id="fotoPerfil" /><br>
+            <span id="faltaFoto" class="faltador">&nbsp;</span>
+            <br>
           </div>
         </div>
-        <button class="btn btn-info mb-3" id="btnRegistro">Registrarme</button>
-        <p><a href="#"> Iniciar sesión</a></p>
+        <button class="btn btn-info m-3" id="btnRegistro">Registrarme</button>
+        <p><a class="btn btn-success" href="#"> Iniciar sesión</a></p>
       </form>
     </div>
 

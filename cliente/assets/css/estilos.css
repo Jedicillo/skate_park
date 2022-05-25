@@ -36,3 +36,12 @@ tbody tr:nth-child(3) td div{
 input{
     text-align: center;
 }
+
+.faltador{
+    color: #bc1850;
+    text-shadow: none;
+}
+
+a {
+    text-shadow: none;
+}
