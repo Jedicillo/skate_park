@@ -11,7 +11,6 @@ const fotoPerfil = document.getElementById('fotoPerfil');
 
 btnRegistro.addEventListener('click', async (e) => {
     //e.preventDefault();
-    console.log('Entra al click del registro');
     const email = txtEmail.value;
     const nombre = txtNombre.value;
     const password = txtPass.value;
@@ -20,8 +19,12 @@ btnRegistro.addEventListener('click', async (e) => {
     const foto = fotoPerfil.files[0];
 
     let registrado = await registrarUsuario(email, nombre, password, experiencia, especialidad, foto);
-    
-
+    //console.log('Después del await');
+    if(registrado){
+        console.log(registrado.mensaje);
+    }else {
+        console.log('No me llega el mensaje');
+    }
 });
 
 
@@ -44,12 +47,8 @@ const registrarUsuario = (email, nombre, pass, exp, espec, foto) => {
     })
     .then(res => res.json())
     .catch(error => console.log('Error: ', error))
-    .then(resp => {
-        console.log('Exito', resp);
-        if(resp){
-            console.log('Registro exitoso', resp.mensaje);
-        }
-        return resp;
-    });
+    .then(resp => resp);
+    
+    return registro;
 
 };
