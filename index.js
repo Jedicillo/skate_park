@@ -1,10 +1,10 @@
 const express = require('express');
 const app = express();
-import 'dotenv/config';
-const { Pool } = require('pg');
+require('dotenv').config();
 const hbs = require('express-handlebars');
 const fu = require('express-fileupload');
 const { v4 } = require('uuid');
+const { registrarUsuario } = require('./consultas.js');
 
 app.listen(3000, () => console.log("Servidor activo en http://localhost:3000"));
 
@@ -40,16 +40,34 @@ app.get("/registro", (req, res) => {
 app.post("/registro", async (req, res) => {
     const { email, nombre, pass, exp, espec } = req.body;
     const { foto } = req.files;
-    const codFoto = v4();
-    try {
-        await foto.mv(`${__dirname}/imgs/${codFoto}.jpg`);
-    } catch (error) {
-        console.log('Problema al crear imagen', error);
-    }
+    const nomFoto = v4();
+    const rutaFoto = `${__dirname}/imgs/${nomFoto}.jpg`
     
+    let err = false
+    let registro = [];
+
+    try {
+        await foto.mv(rutaFoto);
+    } catch (error) {
+        err = true;
+        console.log('Subida de imagen fallida', error);
+        registro = {'rows': [{'mensaje' : 'Subida de imagen fallida'}]};
+    };
+
+    if(!err){
+        try {
+            console.log('Pasa por el registrarUsuario');
+            registro = await registrarUsuario(email, nombre, pass, exp, espec, nomFoto)
+        } catch (error) {
+            err = true;
+            console.log('Registro usuario fallido', error);
+            registro = {'rows': [{'mensaje' : 'registro fallido'}, {'error' : error}]};
+        }
+    };
+   
     //const { foto } = req.files;
-    console.log('Registro', {email, nombre, pass, exp, espec});
-    console.log('Registro Foto:', foto.name);
-    res.json({ 'mensaje': 'Mensaje desde el servidor'});
+    //console.log('Registro', {email, nombre, pass, exp, espec});
+    //console.log('Registro Foto:', foto.name);
+    res.status(err? 401 : 200).send(registro.rows);
 
 });

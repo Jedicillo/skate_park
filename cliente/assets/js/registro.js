@@ -21,7 +21,7 @@ btnRegistro.addEventListener('click', async (e) => {
     let registrado = await registrarUsuario(email, nombre, password, experiencia, especialidad, foto);
     //console.log('Después del await');
     if(registrado){
-        console.log(registrado.mensaje);
+        console.log(registrado);
     }else {
         console.log('No me llega el mensaje');
     }
