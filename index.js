@@ -44,7 +44,7 @@ app.post("/registro", async (req, res) => {
     const rutaFoto = `${__dirname}/imgs/${nomFoto}.jpg`
     
     let err = false
-    let registro = [];
+    let registro ;
 
     try {
         await foto.mv(rutaFoto);

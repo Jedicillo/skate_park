@@ -16,6 +16,12 @@ const faltaExp = document.getElementById('faltaExp');
 const faltaEspec = document.getElementById('faltaEspec');
 const faltaFoto = document.getElementById('faltaFoto');
 
+//const modalExito = document.getElementById('modalExito');
+const modalExito = new bootstrap.Modal(document.getElementById('modalExito'), {
+    keyboard: false
+  })
+  
+
 btnRegistro.addEventListener('click', async (e) => {
     e.preventDefault();
     let falta = false;
@@ -63,14 +69,14 @@ btnRegistro.addEventListener('click', async (e) => {
         faltaFoto.innerText = "Falta una foto de perfil";
     } else faltaFoto.innerHTML = "&nbsp;";
     
-
     if(!falta){
         let registrado = await registrarUsuario(email, nombre, password, experiencia, especialidad, foto);
         //console.log('Después del await');
         if(registrado){
             console.log(registrado);
+            modalExito.show();
         }else {
-            console.log('No me llega el mensaje');
+            console.log('No se ha registrado');
         }
     };
 });
@@ -98,8 +104,8 @@ const registrarUsuario = (email, nombre, pass, exp, espec, foto) => {
     .then(resp => resp);
     
     return registro;
-
 };
+
 
 //https://stackoverflow.com/questions/60737672/email-regex-pattern-in-nodejs
 function isEmail(email){
