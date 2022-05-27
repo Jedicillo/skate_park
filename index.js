@@ -4,7 +4,9 @@ require('dotenv').config();
 const hbs = require('express-handlebars');
 const fu = require('express-fileupload');
 const { v4 } = require('uuid');
+const jwt = require('jsonwebtoken');
 const { registrarUsuario } = require('./consultas.js');
+
 
 app.listen(3000, () => console.log("Servidor activo en http://localhost:3000"));
 
@@ -46,28 +48,67 @@ app.post("/registro", async (req, res) => {
     let err = false
     let registro ;
 
+    if(!isEmail(email)){
+        err = true;
+        registro = {'codigo' : 'error', 'mensaje' : 'Correo no válido'};
+    };
+    if(!nombre){
+        err = true;
+        registro = {'codigo' : 'error', 'mensaje' : 'Se requiere un nombre'};
+    };
+    if(!pass){
+        err = true;
+        registro = {'codigo' : 'error', 'mensaje' : 'Se requiere una contraseña'};
+    };
+    if(!exp){
+        err = true;
+        registro = {'codigo' : 'error', 'mensaje' : 'De no haber experiencia, indicar 0'};
+    };
+    if(!espec){
+        err = true;
+        registro = {'codigo' : 'error', 'mensaje' : 'Se requiere una especialidad'};
+    };
+
     try {
         await foto.mv(rutaFoto);
     } catch (error) {
         err = true;
         console.log('Subida de imagen fallida', error);
-        registro = {'rows': [{'mensaje' : 'Subida de imagen fallida'}]};
+        registro = {'codigo': 'error', 'mensaje' : 'Subida de imagen fallida'};
     };
 
+    const token = jwt.sign(email, process.env.JWT_LLAVE);
+    
     if(!err){
         try {
             console.log('Pasa por el registrarUsuario');
             registro = await registrarUsuario(email, nombre, pass, exp, espec, nomFoto)
+            
         } catch (error) {
             err = true;
             console.log('Registro usuario fallido', error);
-            registro = {'rows': [{'mensaje' : 'registro fallido'}, {'error' : error}]};
+            registro = {'codigo': 'error', 'mensaje' : 'registro fallido'};
         }
     };
    
     //const { foto } = req.files;
     //console.log('Registro', {email, nombre, pass, exp, espec});
     //console.log('Registro Foto:', foto.name);
-    res.status(err? 401 : 200).send(registro.rows);
+    res.status(err? 201 : 200).send(err? registro: {
+        codigo: 'exito',
+        token: token,
+        rows: registro.rows
+    });
 
 });
+
+
+function isEmail(email){
+    var emailFormat=/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+    if(email !== '' && email.match(emailFormat)){
+        return true;
+    }
+    else{
+        return false;
+    }
+};

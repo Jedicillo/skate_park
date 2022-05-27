@@ -19,8 +19,8 @@ const faltaFoto = document.getElementById('faltaFoto');
 //const modalExito = document.getElementById('modalExito');
 const modalExito = new bootstrap.Modal(document.getElementById('modalExito'), {
     keyboard: false
-  })
-  
+});
+
 
 btnRegistro.addEventListener('click', async (e) => {
     e.preventDefault();
@@ -72,8 +72,9 @@ btnRegistro.addEventListener('click', async (e) => {
     if(!falta){
         let registrado = await registrarUsuario(email, nombre, password, experiencia, especialidad, foto);
         //console.log('Después del await');
-        if(registrado){
+        if(registrado.codigo == 'exito'){
             console.log(registrado);
+            localStorage.setItem("token", registrado.token)
             modalExito.show();
         }else {
             console.log('No se ha registrado');
@@ -86,10 +87,10 @@ const registrarUsuario = (email, nombre, pass, exp, espec, foto) => {
     const fd = new FormData();
     fd.append('email', email);
     fd.append('nombre', nombre);
-    fd.append('pass', pass)
-    fd.append('exp', exp)
-    fd.append('espec', espec)
-    fd.append('foto', foto)
+    fd.append('pass', pass);
+    fd.append('exp', exp);
+    fd.append('espec', espec);
+    fd.append('foto', foto);
 
     const registro = fetch("/registro", {
         method: "POST",
