@@ -35,15 +35,18 @@ app.get("/", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-    res.sendFile(`${__dirname}/cliente/Login.html`);
+    //res.sendFile(`${__dirname}/cliente/Login.html`);
+    res.render("login");
 });
 
 app.get("/datos", (req, res) => {
-    res.sendFile(`${__dirname}/cliente/Datos.html`);
+    //res.sendFile(`${__dirname}/cliente/Datos.html`);
+    res.render("datos");
 });
 
 app.get("/admin", (req, res) => {
     res.sendFile(`${__dirname}/cliente/Admin.html`);
+    res.render("admin");
 });
 
 app.get("/registro", (req, res) => {
