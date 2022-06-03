@@ -1,0 +1,43 @@
+<form id="formulario">
+        <div class="row">
+          <div class="col-12 col-lg-6">
+            <label for="txtEmail">Email</label>
+            <input type="email" class="form-control" id="txtEmail" value="correo" required />
+            <span id="faltaEmail" class="faltador">&nbsp;</span>
+          </div>
+          <div class="col-12 col-lg-6">
+            <label for="txtNombre">Nombre</label>
+            <input class="form-control " id="txtNombre" value="nombre" required/>
+            <span id="faltaNombre" class="faltador">&nbsp;</span>
+          </div>
+          <div class="col-12 col-lg-6">
+            <label for="txtPass">Password</label>
+            <input type="password" class="form-control" id="txtPass" value="pass" required />
+            <span id="faltaPass" class="faltador">&nbsp;</span>
+          </div>
+          <div class="col-12  col-lg-6">
+            <label for="txtPass2">Repita la password</label>
+            <input type="password" class="form-control" id="txtPass2" value="pass" required/>
+            <label id="veriPass hidden"></label>
+            <span id="faltaPass2" class="faltador">&nbsp;</span>
+          </div>
+          <div class="col-12  col-lg-6">
+            <label for="txtExp">Años de experiencia</label>
+            <input class="form-control" id="txtExp" value="12" required />
+            <span id="faltaExp" class="faltador">&nbsp;</span>
+          </div>
+          <div class="col-12 col-lg-6">
+            <label for="txtEspec">Especialidad</label>
+            <input class="form-control m-auto" id="txtEspec" value="espec" required />
+            <span id="faltaEspec" class="faltador">&nbsp;</span>
+          </div>
+          <div class="col-12">
+            <label for="fotoPerfil">Foto de perfil</label>
+            <input type="file" id="fotoPerfil" /><br>
+            <span id="faltaFoto" class="faltador">&nbsp;</span>
+            <br>
+          </div>
+        </div>
+        <button class="btn btn-info m-3" id="btnRegistro">Registrarme</button>
+        <p><a class="btn btn-success" href="#"> Iniciar sesión</a></p>
+      </form>

@@ -8,6 +8,16 @@ const jwt = require('jsonwebtoken');
 const { registrarUsuario } = require('./consultas.js');
 
 
+app.set("view engine", "handlebars");
+app.engine(
+    "handlebars",
+    hbs.engine({
+        defaultLayout: `main`,
+        layoutsDir: `${__dirname}/views/layouts`,
+        partialsDir: `${__dirname}/views/partials`
+    })
+)
+
 app.listen(3000, () => console.log("Servidor activo en http://localhost:3000"));
 
 app.use(fu());
@@ -20,7 +30,8 @@ app.use("/img", express.static(`${__dirname}/cliente/assets/img`));
 
 
 app.get("/", (req, res) => {
-    res.sendFile(`${__dirname}/cliente/index.html`);
+    res.render("listado");
+    //res.sendFile(`${__dirname}/cliente/index.html`);
 });
 
 app.get("/login", (req, res) => {
@@ -36,7 +47,8 @@ app.get("/admin", (req, res) => {
 });
 
 app.get("/registro", (req, res) => {
-    res.sendFile(`${__dirname}/cliente/Registro.html`);
+    res.render("registro");
+    //res.sendFile(`${__dirname}/cliente/registro.html`);
 });
 
 app.post("/registro", async (req, res) => {

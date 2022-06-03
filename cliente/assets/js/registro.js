@@ -74,7 +74,7 @@ btnRegistro.addEventListener('click', async (e) => {
         //console.log('Después del await');
         if(registrado.codigo == 'exito'){
             console.log(registrado);
-            localStorage.setItem("token", registrado.token)
+            localStorage.setItem("token-aut", registrado.token);
             modalExito.show();
         }else {
             console.log('No se ha registrado');
