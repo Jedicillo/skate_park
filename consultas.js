@@ -25,5 +25,20 @@ const registrarUsuario = async (email, nombre, pass, exp, espec, nombreFoto) => 
     }
 };
 
+const listarUsuarios = async () => {
+    console.log("Llega al listado de usuarios");
+    try {
+        const config = {
+            text: "Select * from public.skaters;",
+            values: []
+        };
+        const resp = pool.query(config);
+        return resp;
+    } catch (error) {
+        console.log("Hubo un error en el listado: " + error);
+        return error;
+    };
+}
 
-module.exports = { registrarUsuario }
+
+module.exports = { registrarUsuario, listarUsuarios }

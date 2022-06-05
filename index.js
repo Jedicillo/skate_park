@@ -5,7 +5,7 @@ const hbs = require('express-handlebars');
 const fu = require('express-fileupload');
 const { v4 } = require('uuid');
 const jwt = require('jsonwebtoken');
-const { registrarUsuario } = require('./consultas.js');
+const { registrarUsuario, listarUsuarios } = require('./consultas.js');
 
 
 app.set("view engine", "handlebars");
@@ -30,7 +30,20 @@ app.use("/img", express.static(`${__dirname}/cliente/assets/img`));
 
 
 app.get("/", (req, res) => {
-    res.render("listado");
+    try {
+        const resp = await listarUsuarios();
+        //res.json(resp.rows);
+        res.render("listaod", {
+            listado: resp.rows
+        });
+    } catch (error) {
+        console.log("Error en listar:" + error)
+        res.render("listado", {
+            listado: []
+        })
+        
+    }
+    //res.render("listado");
     //res.sendFile(`${__dirname}/cliente/index.html`);
 });
 
@@ -45,7 +58,7 @@ app.get("/datos", (req, res) => {
 });
 
 app.get("/admin", (req, res) => {
-    res.sendFile(`${__dirname}/cliente/Admin.html`);
+    //res.sendFile(`${__dirname}/cliente/Admin.html`);
     res.render("admin");
 });
 
