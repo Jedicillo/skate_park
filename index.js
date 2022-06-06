@@ -26,14 +26,14 @@ app.use(express.json());
 app.use("/bootstrap", express.static(`${__dirname}/node_modules/bootstrap/dist`));
 app.use("/css", express.static(`${__dirname}/cliente/assets/css`));
 app.use("/js", express.static(`${__dirname}/cliente/assets/js`));
-app.use("/img", express.static(`${__dirname}/cliente/assets/img`));
+app.use("/imgs", express.static(`${__dirname}/imgs`));
 
 
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
     try {
         const resp = await listarUsuarios();
         //res.json(resp.rows);
-        res.render("listaod", {
+        res.render("listado", {
             listado: resp.rows
         });
     } catch (error) {
@@ -41,7 +41,6 @@ app.get("/", (req, res) => {
         res.render("listado", {
             listado: []
         })
-        
     }
     //res.render("listado");
     //res.sendFile(`${__dirname}/cliente/index.html`);
