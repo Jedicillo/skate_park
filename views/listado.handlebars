@@ -1,7 +1,11 @@
 <div class="py-4">
       <h2>Lista de participantes</h2>
       <hr />
+      <div class="row">
       {{#each listado}}
-      {{> item_listado }}
+      <div class="col-6 p-2">
+        {{> item_listado }}
+      </div>
       {{/each}}
+      </div>
 </div>

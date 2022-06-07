@@ -44,3 +44,8 @@ input{
 a {
     text-shadow: none;
 }
+
+.fotosPerfil {
+    height: 200px;
+    width: auto;
+}
