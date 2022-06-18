@@ -5,6 +5,7 @@ const hbs = require('express-handlebars');
 const fu = require('express-fileupload');
 const { v4 } = require('uuid');
 const jwt = require('jsonwebtoken');
+const cp = require('cookie-parser');
 const { registrarUsuario, listarUsuarios } = require('./consultas.js');
 
 
@@ -22,6 +23,7 @@ app.listen(3000, () => console.log("Servidor activo en http://localhost:3000"));
 
 app.use(fu());
 app.use(express.json());
+app.use(cp());
 
 app.use("/bootstrap", express.static(`${__dirname}/node_modules/bootstrap/dist`));
 app.use("/css", express.static(`${__dirname}/cliente/assets/css`));
@@ -51,11 +53,6 @@ app.get("/login", (req, res) => {
     res.render("login");
 });
 
-app.get("/datos", (req, res) => {
-    //res.sendFile(`${__dirname}/cliente/Datos.html`);
-    res.render("datos");
-});
-
 app.get("/admin", (req, res) => {
     //res.sendFile(`${__dirname}/cliente/Admin.html`);
     res.render("admin");
@@ -66,6 +63,26 @@ app.get("/registro", (req, res) => {
     //res.sendFile(`${__dirname}/cliente/registro.html`);
 });
 
+app.get("/perfil", (req, res) => {
+    const token = req.headers.authorization
+    console.log(token);
+
+    jwt.verify(token, process.env.JWT_LLAVE, (error, data) => {
+        if (error) {
+            console.log(error)
+            autorizado = false;
+        } else {
+            correo = data
+            autorizado = true;
+        }
+    })
+    console.log("/Perfil Autorizado:", correo, autorizado)
+
+    res.render("perfil", {
+        perfil: true
+    });
+});
+
 app.post("/registro", async (req, res) => {
     const { email, nombre, pass, exp, espec } = req.body;
     const { foto } = req.files;
@@ -74,6 +91,7 @@ app.post("/registro", async (req, res) => {
     
     let err = false
     let registro ;
+    //console.log("Llega al post registro");
 
     if(!isEmail(email)){
         err = true;
@@ -121,11 +139,27 @@ app.post("/registro", async (req, res) => {
     //const { foto } = req.files;
     //console.log('Registro', {email, nombre, pass, exp, espec});
     //console.log('Registro Foto:', foto.name);
-    res.status(err? 201 : 200).send(err? registro: {
+    if (!err){
+        console.log('Llega al envío de la cookie');
+        res.cookie("skate-aut", token, {
+            secure: false,
+            httpOnly: true,
+        });
+        res.status(201).send(
+        {
+            codigo: 'exito',
+            correo: email
+            ///token: token,
+            //rows: registro.rows
+        })
+    }else{
+        res.status(401)
+    };
+/*     res.status(err? 401 : 200).send(err? registro: {
         codigo: 'exito',
         token: token,
         rows: registro.rows
-    });
+    }); */
 
 });
 

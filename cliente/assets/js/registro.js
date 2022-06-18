@@ -69,12 +69,15 @@ btnRegistro.addEventListener('click', async (e) => {
         faltaFoto.innerText = "Falta una foto de perfil";
     } else faltaFoto.innerHTML = "&nbsp;";
     
+    console.log(falta);
+
     if(!falta){
         let registrado = await registrarUsuario(email, nombre, password, experiencia, especialidad, foto);
         //console.log('Después del await');
+        console.log(registrado);
         if(registrado.codigo == 'exito'){
-            console.log(registrado);
-            localStorage.setItem("token-aut", registrado.token);
+            //console.log(registrado);
+            //localStorage.setItem("skate-aut", registrado.token);
             modalExito.show();
         }else {
             console.log('No se ha registrado');
@@ -96,7 +99,7 @@ const registrarUsuario = (email, nombre, pass, exp, espec, foto) => {
         method: "POST",
         //headers: {"Content-Type" : "multipart/form-data"},
         //headers: {"Content-Type" : "application/json"},
-        //Sin Header para que el navegador agrege el boundary
+        //Sin Header para que el navegador agrege el boundary y pueda subir la imagen
         // https://muffinman.io/blog/uploading-files-using-fetch-multipart-form-data/
         body: fd
     })
