@@ -15,6 +15,7 @@ const faltaPass2 = document.getElementById('faltaPass2');
 const faltaExp = document.getElementById('faltaExp');
 const faltaEspec = document.getElementById('faltaEspec');
 const faltaFoto = document.getElementById('faltaFoto');
+const faltaConsent = document.getElementById("faltaConsent");
 
 //const modalExito = document.getElementById('modalExito');
 const modalExito = new bootstrap.Modal(document.getElementById('modalExito'), {
@@ -69,6 +70,11 @@ btnRegistro.addEventListener('click', async (e) => {
         faltaFoto.innerText = "Falta una foto de perfil";
     } else faltaFoto.innerHTML = "&nbsp;";
     
+    if(!revisaCookieConsentimiento()){
+        falta = true;
+        faltaConsent.innerText = "Falta el consentimiento de cookies";
+    } else faltaConsent.innerHTML  ="&nbsp;";
+
     console.log(falta);
 
     if(!falta){

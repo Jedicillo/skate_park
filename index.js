@@ -64,28 +64,36 @@ app.get("/registro", (req, res) => {
 });
 
 app.get("/perfil", (req, res) => {
-    const token = req.headers.authorization
-    console.log(token);
+    //const token = req.headers.authorization
+    const token = req.cookies['skate-aut'];
+    console.log('cookie', token);
 
-    jwt.verify(token, process.env.JWT_LLAVE, (error, data) => {
-        if (error) {
-            console.log(error)
-            autorizado = false;
-        } else {
-            correo = data
-            autorizado = true;
-        }
-    })
-    console.log("/Perfil Autorizado:", correo, autorizado)
+    if(typeof token !== 'undefined'){
+        jwt.verify(token, process.env.JWT_LLAVE, (error, data) => {
+            if (error) {
+                console.log(error)
+                autorizado = false;
+            } else {
+                correo = data
+                autorizado = true;
+            }
+        })
+    }else{
+        autorizado = false;
+    }
+
+    console.log('Autorizado: ', autorizado)
 
     res.render("perfil", {
-        perfil: true
+        perfil: true,
+        autorizacion: autorizado 
     });
 });
 
 app.post("/registro", async (req, res) => {
     const { email, nombre, pass, exp, espec } = req.body;
     const { foto } = req.files;
+    const consentimiento = req.cookies["skatepark_cookieConsentimiento"];
     const nomFoto = v4();
     const rutaFoto = `${__dirname}/imgs/${nomFoto}.jpg`
     
@@ -113,6 +121,10 @@ app.post("/registro", async (req, res) => {
         err = true;
         registro = {'codigo' : 'error', 'mensaje' : 'Se requiere una especialidad'};
     };
+    if(!consentimiento) {
+        err = true;
+        registro = {'codigo' : 'error', 'mensaje' : 'Se requiere del consentimiento de cookies'};
+    };
 
     try {
         await foto.mv(rutaFoto);
@@ -136,9 +148,7 @@ app.post("/registro", async (req, res) => {
         }
     };
    
-    //const { foto } = req.files;
-    //console.log('Registro', {email, nombre, pass, exp, espec});
-    //console.log('Registro Foto:', foto.name);
+
     if (!err){
         console.log('Llega al envío de la cookie');
         res.cookie("skate-aut", token, {
@@ -149,17 +159,10 @@ app.post("/registro", async (req, res) => {
         {
             codigo: 'exito',
             correo: email
-            ///token: token,
-            //rows: registro.rows
         })
     }else{
-        res.status(401)
+        res.status(401).json(registro);
     };
-/*     res.status(err? 401 : 200).send(err? registro: {
-        codigo: 'exito',
-        token: token,
-        rows: registro.rows
-    }); */
 
 });
 

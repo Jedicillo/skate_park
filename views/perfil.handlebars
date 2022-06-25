@@ -15,7 +15,9 @@
       <hr class="w-80" />
       <form id="perfil"></form>
         {{> formulario_registro }}
+        {{#if autorizacion}}
         <button class="btn btn-info m-3" id="btnPerfil">Guardar</button>
+        {{/if}}
       </form>      
     </div>
 
