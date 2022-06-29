@@ -1,10 +1,14 @@
+
 <div class="row">
-    <div class="col col-lg-4" >
-        <img src="/imgs/{{this.foto}}.jpg" class="fotosPerfil" alt="Foto {{this.nombre}}">
-    </div>
-    <div class="col col-lg-8">
-        <div>{{ this.nombre }}</div>
-        <div>{{ this.especialidad }}</div>
-        <div>{{ this.anos_experiencia }}</div>
+    <div class="p-2 d-flex">
+        <div class="col col-lg-4" >
+            <img src="/imgs/{{this.foto}}.jpg" class="fotosPerfil" alt="Foto {{this.nombre}}">
+        </div>
+        <div class="col col-lg-8">
+            <div>{{ @index }}</div>
+            <div>{{ this.nombre }}</div>
+            <div>{{ this.especialidad }}</div>
+            <div>{{ this.anos_experiencia }}</div>
+        </div>
     </div>
 </div>
