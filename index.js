@@ -19,6 +19,8 @@ app.engine(
     })
 )
 
+const hbsH = hbs.create({});
+
 app.listen(3000, () => console.log("Servidor activo en http://localhost:3000"));
 
 app.use(fu());
@@ -46,6 +48,14 @@ app.get("/", async (req, res) => {
     }
     //res.render("listado");
     //res.sendFile(`${__dirname}/cliente/index.html`);
+});
+
+hbsH.handlebars.registerHelper('if_impar', function(conditional) {
+    if((conditional % 2) == 0) {
+      return true;
+    } else {
+      return false;
+    }
 });
 
 app.get("/login", (req, res) => {
