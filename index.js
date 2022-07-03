@@ -19,6 +19,8 @@ app.engine(
     })
 )
 
+// https://stackoverflow.com/questions/41764373/how-to-register-custom-handlebars-helpers
+// Se debe crear para que funcione el registerHelper
 const hbsH = hbs.create({});
 
 app.listen(3000, () => console.log("Servidor activo en http://localhost:3000"));
@@ -50,11 +52,12 @@ app.get("/", async (req, res) => {
     //res.sendFile(`${__dirname}/cliente/index.html`);
 });
 
+// https://stackoverflow.com/questions/18976274/odd-and-even-number-comparison-helper-for-handlebars
 hbsH.handlebars.registerHelper('if_impar', function(conditional) {
     if((conditional % 2) == 0) {
-      return true;
-    } else {
       return false;
+    } else {
+      return true;
     }
 });
 
