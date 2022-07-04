@@ -57,5 +57,9 @@ a {
 }
 
 .border-tarjeta:hover {
-    box-shadow: 0 0 11px #FFB136;
+    box-shadow: 0 0 30px #FFB136;
+}
+
+.logeo {
+    max-width: 50%;
 }
