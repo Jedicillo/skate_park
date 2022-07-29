@@ -25,6 +25,20 @@ const registrarUsuario = async (email, nombre, pass, exp, espec, nombreFoto) => 
     }
 };
 
+const verificarUsuario = async (correo, pass) => {
+    try {
+        const config = {
+            text: 'Select * from public.skaters where correo = $1 and "password" = $2;',
+            vañues: [correo, pass]
+        };
+        const resp = pool.query(config);
+        return resp;
+    } catch (error) {
+        console.log('Hubo un error: ', error);
+        return error;
+    };
+};
+
 const listarUsuarios = async () => {
     console.log("Llega al listado de usuarios");
     try {
@@ -38,7 +52,7 @@ const listarUsuarios = async () => {
         console.log("Hubo un error en el listado: " + error);
         return error;
     };
-}
+};
 
 
-module.exports = { registrarUsuario, listarUsuarios }
+module.exports = { registrarUsuario, listarUsuarios, verificarUsuario }

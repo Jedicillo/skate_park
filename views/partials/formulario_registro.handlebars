@@ -1,8 +1,10 @@
 
+{{ this.autorizacion }}
+
 <div class="row">
   <div class="col-12 col-lg-6">
     <label for="txtEmail">Email</label>
-    <input type="email" class="form-control" id="txtEmail" value="correo" {{#if perfil}} disabled {{else}} required {{/if}} />
+    <input type="email" class="form-control" id="txtEmail" value="{{ this.datos.p_correo }}" {{#if perfil}} disabled {{else}} required {{/if}} />
     <span id="faltaEmail" class="faltador">&nbsp;</span>
   </div>
   <div class="col-12 col-lg-6">

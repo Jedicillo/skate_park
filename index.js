@@ -66,6 +66,27 @@ app.get("/login", (req, res) => {
     res.render("login");
 });
 
+app.post("/login", (req, res) => {
+    console.log('/login:', req.body);
+    const {correo, pass} = req.body;
+    //console.log(correo, pass);
+
+    //console.log('Llega al envío de la cookie');
+    const token = jwt.sign(correo, process.env.JWT_LLAVE);
+    res.cookie("skate-aut", token, {
+        secure: false,
+        httpOnly: true,
+    });
+    //res.redirect("/perfil");
+    res.status(201).send(
+    {
+        codigo: 'exito',
+        correo: correo
+    })
+    /* res.status(401).json(registro); */
+
+});
+
 app.get("/admin", (req, res) => {
     //res.sendFile(`${__dirname}/cliente/Admin.html`);
     res.render("admin");
@@ -79,7 +100,7 @@ app.get("/registro", (req, res) => {
 app.get("/perfil", (req, res) => {
     //const token = req.headers.authorization
     const token = req.cookies['skate-aut'];
-    console.log('cookie', token);
+    console.log('/perfil Cookie: ', token);
 
     if(typeof token !== 'undefined'){
         jwt.verify(token, process.env.JWT_LLAVE, (error, data) => {
@@ -95,11 +116,19 @@ app.get("/perfil", (req, res) => {
         autorizado = false;
     }
 
-    console.log('Autorizado: ', autorizado)
+    if (autorizado) {
+        var p_datos = {
+            p_correo: correo,
+            p_nombre: 'Nombre de prueba'
+            }
+    }
+
+    console.log('/perfil Autorizado: ', autorizado)
 
     res.render("perfil", {
         perfil: true,
-        autorizacion: autorizado 
+        autorizacion: autorizado,
+        datos: p_datos
     });
 });
 
