@@ -6,7 +6,7 @@ const fu = require('express-fileupload');
 const { v4 } = require('uuid');
 const jwt = require('jsonwebtoken');
 const cp = require('cookie-parser');
-const { registrarUsuario, listarUsuarios } = require('./consultas.js');
+const { registrarUsuario, listarUsuarios, verificarUsuario } = require('./consultas.js');
 
 
 app.set("view engine", "handlebars");
@@ -66,12 +66,25 @@ app.get("/login", (req, res) => {
     res.render("login");
 });
 
-app.post("/login", (req, res) => {
+app.post("/login", async (req, res) => {
     console.log('/login:', req.body);
     const {correo, pass} = req.body;
     //console.log(correo, pass);
 
-    //console.log('Llega al envío de la cookie');
+    let validacion = true;
+    try {
+        registro = await verificarUsuario(correo, pass);
+    } catch (error) {
+        console.log(error)
+        registro = "Error en la validación. Correo o Contraseña incorrecto."
+        validacion = false
+    }
+     
+    if (registro.rows <= 0) {
+        validacion = false;
+    }
+
+    console.log('/login registro: ', registro);
     const token = jwt.sign(correo, process.env.JWT_LLAVE);
     res.cookie("skate-aut", token, {
         secure: false,
@@ -80,7 +93,7 @@ app.post("/login", (req, res) => {
     //res.redirect("/perfil");
     res.status(201).send(
     {
-        codigo: 'exito',
+        codigo: validacion? 'Exito' : 'Error',
         correo: correo
     })
     /* res.status(401).json(registro); */
@@ -116,20 +129,33 @@ app.get("/perfil", (req, res) => {
         autorizado = false;
     }
 
-    if (autorizado) {
+
+    console.log('/perfil Autorizado: ', registro);
+
+    if (registro.rows.count > 0) {
         var p_datos = {
             p_correo: correo,
-            p_nombre: 'Nombre de prueba'
+            p_nombre: registro.rows.nombre,
+            p_especialidad: registro.rows.especialidad
             }
+
+            res.render("perfil", {
+                perfil: true,
+                autorizacion: autorizado,
+                datos: p_datos
+            });
+    } else {
+
+        res.render("login", {
+            perfil: false,
+            autorizacion: autorizado,
+            error: "Correo o Contraseña incorrectos"
+
+        })
+        
     }
 
-    console.log('/perfil Autorizado: ', autorizado)
 
-    res.render("perfil", {
-        perfil: true,
-        autorizacion: autorizado,
-        datos: p_datos
-    });
 });
 
 app.post("/registro", async (req, res) => {

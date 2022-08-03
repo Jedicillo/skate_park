@@ -28,13 +28,13 @@ const registrarUsuario = async (email, nombre, pass, exp, espec, nombreFoto) => 
 const verificarUsuario = async (correo, pass) => {
     try {
         const config = {
-            text: 'Select * from public.skaters where correo = $1 and "password" = $2;',
-            vañues: [correo, pass]
+            text: 'Select * from public.skaters where email = $1 and "password" = $2;',
+            values: [correo, pass]
         };
         const resp = pool.query(config);
         return resp;
     } catch (error) {
-        console.log('Hubo un error: ', error);
+        console.log('Error al verificar usuario: ', error);
         return error;
     };
 };
