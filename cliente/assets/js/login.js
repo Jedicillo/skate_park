@@ -19,7 +19,7 @@ acceder.addEventListener('click', async (e) => {
     let registrado = await usuarioRegistrado(correo, pass);
     console.log(registrado);
 
-    if (registrado.codigo == 'exito') {
+    if (registrado.codigo == 'Exito') {
         console.log('Usuario Registrado');
         window.location.href ="/perfil"
     } else {

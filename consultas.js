@@ -54,5 +54,65 @@ const listarUsuarios = async () => {
     };
 };
 
+const listarUsuario = async (correo) => {
+    console.log("Llega al listado de usuarios");
+    try {
+        const config = {
+            text: "Select * from public.skaters where email = $1;",
+            values: [correo]
+        };
+        const resp = pool.query(config);
+        return resp;
+    } catch (error) {
+        console.log("Hubo un error en el listado: " + error);
+        return error;
+    };
+};
 
-module.exports = { registrarUsuario, listarUsuarios, verificarUsuario }
+/*----------- LOGEOS -------------*/
+const borrarLogeoAnterior = async (id_correo) => {
+    console.log("Pasa por el borrar logeo");
+    try {
+        const config = {
+            text: "Delete from public.logeos where id_correo = $1 returning *;",
+            values: [id_correo]
+        };
+        const resp = pool.query(config);
+        return resp;
+    } catch (error) {
+        console.log("Error al borrar logeo anterior");
+        return error;
+    };
+};
+
+const buscarId_Correo = async (correo) => {
+    console.log("Pasa por el buscar id_correo");
+    try {
+        const config = {
+            text: "Select id from public.skaters where email = $1;",
+            values: [correo]
+        };
+        const resp = pool.query(config);
+        return resp;
+    } catch (error) {
+        console.log("Error al buscar el id_correo");
+        return error;
+    };
+};
+
+const registrarLogeo = async (id_correo, token, navegador, direccion_ip) => {
+    console.log("Pasa por el registro de logeos");
+    try {
+        const config = {
+            text: "Insert into public.logeos (id_correo, token_cliente, direccion_ip, tipo_navegador, fecha_creacion) values ($1, $2, $3, $4, default) returning *;",
+            values: [id_correo, token, navegador, direccion_ip]
+        };
+        const resp = pool.query(config);
+        return resp;
+    } catch (error) {
+        console.log("Error al insertar logeo: ", error);
+        return error;
+    };
+};
+
+module.exports = { registrarUsuario, listarUsuarios, verificarUsuario, listarUsuario, borrarLogeoAnterior, buscarId_Correo, registrarLogeo }

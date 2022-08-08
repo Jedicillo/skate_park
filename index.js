@@ -6,7 +6,7 @@ const fu = require('express-fileupload');
 const { v4 } = require('uuid');
 const jwt = require('jsonwebtoken');
 const cp = require('cookie-parser');
-const { registrarUsuario, listarUsuarios, verificarUsuario } = require('./consultas.js');
+const { registrarUsuario, listarUsuarios, verificarUsuario, listarUsuario, borrarLogeoAnterior, buscarId_Correo, registrarLogeo } = require('./consultas.js');
 
 
 app.set("view engine", "handlebars");
@@ -68,10 +68,15 @@ app.get("/login", (req, res) => {
 
 app.post("/login", async (req, res) => {
     console.log('/login:', req.body);
+    console.log('/login ip: ', req.headers['x-forwarded-for']);
+    console.log('/login ip2: ', req.socket.remoteAddress);
+    console.log('/login navegador: ', req.headers['user-agent']);
+    console.log('/login ip3: ', JSON.stringify(req.ip));
     const {correo, pass} = req.body;
     //console.log(correo, pass);
 
     let validacion = true;
+    let registro;
     try {
         registro = await verificarUsuario(correo, pass);
     } catch (error) {
@@ -84,12 +89,25 @@ app.post("/login", async (req, res) => {
         validacion = false;
     }
 
-    console.log('/login registro: ', registro);
+    console.log('/login registro: ', registro.rows);
     const token = jwt.sign(correo, process.env.JWT_LLAVE);
-    res.cookie("skate-aut", token, {
-        secure: false,
-        httpOnly: true,
-    });
+
+    if (validacion) {
+        /// Buscar id de correo
+        const id_correo = registro.rows.id;
+        /// Eliminar logeo anterior
+        
+
+        //// Guardar en bd tabla logeos el correo, token y datos ip y navegador
+        res.cookie("skate-aut", token, {
+            secure: false,
+            httpOnly: true,
+        });
+    } else {
+        
+    }
+
+
     //res.redirect("/perfil");
     res.status(201).send(
     {
@@ -110,7 +128,7 @@ app.get("/registro", (req, res) => {
     //res.sendFile(`${__dirname}/cliente/registro.html`);
 });
 
-app.get("/perfil", (req, res) => {
+app.get("/perfil", async (req, res) => {
     //const token = req.headers.authorization
     const token = req.cookies['skate-aut'];
     console.log('/perfil Cookie: ', token);
@@ -129,8 +147,18 @@ app.get("/perfil", (req, res) => {
         autorizado = false;
     }
 
+    //// Aquí debería verificar con la BD que el token corresponda con el inicio de sesión
+    /// Crear Función verificarTokenInicio(token)
 
-    console.log('/perfil Autorizado: ', registro);
+    try {
+        registro = await listarUsuario(correo);
+    } catch (error) {
+        registro = {};
+        console.log('/Perfil listarUsuario Error:', error)
+    }
+    
+
+    console.log('/perfil Autorizado: ', registro.rows);
 
     if (registro.rows.count > 0) {
         var p_datos = {
@@ -154,7 +182,6 @@ app.get("/perfil", (req, res) => {
         })
         
     }
-
 
 });
 
