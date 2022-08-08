@@ -68,8 +68,6 @@ app.get("/login", (req, res) => {
 
 app.post("/login", async (req, res) => {
     console.log('/login:', req.body);
-    console.log('/login ip: ', req.headers['x-forwarded-for']);
-    console.log('/login ip2: ', req.socket.remoteAddress);
     console.log('/login navegador: ', req.headers['user-agent']);
     console.log('/login ip3: ', JSON.stringify(req.ip));
     const {correo, pass} = req.body;
@@ -91,18 +89,19 @@ app.post("/login", async (req, res) => {
         validacion = false;
     }
 
-    console.log('/login registro: ', registro.rows);
+    //console.log('/login registro: ', registro.rows);
     const token = jwt.sign(correo, process.env.JWT_LLAVE);
 
     if (validacion) {
         validacion2 = true;
         /// Buscar id de correo
-        const id_correo = registro.rows.id;
+        console.log("registro.rows: ", registro.rows)
+        const id_correo = registro.rows[0].id;
         /// Eliminar logeo anterior
         try {
             const borraLogeo = await borrarLogeoAnterior(id_correo);
         } catch (error) {
-            console.log("Error /logeo al borrar el logeo anterior");
+            console.log("Error /logeo al borrar el logeo anterior", error);
             validacion2 = false;
         };
 
@@ -111,7 +110,11 @@ app.post("/login", async (req, res) => {
             try {
                 const registraLogeo = await registrarLogeo(id_correo, token, direccion_ip, navegador);
             } catch (error) {
-                console.log("Error /logeo al registrar un nuevo logeo");
+                console.log("id_correo: ", id_correo);
+                console.log("token: ", token);
+                console.log("direccion_ip: ", direccion_ip);
+                console.log("navegador: ", navegador);
+                console.log("Error /logeo al registrar un nuevo logeo", error);
                 validacion2 = false;
             };
         };
@@ -176,9 +179,9 @@ app.get("/perfil", async (req, res) => {
     }
     
 
-    console.log('/perfil Autorizado: ', registro.rows);
+    console.log('/perfil Autorizado: ', registro.rows.length);
 
-    if (registro.rows.count > 0) {
+    if (registro.rows.length > 0) {
         var p_datos = {
             p_correo: correo,
             p_nombre: registro.rows.nombre,
