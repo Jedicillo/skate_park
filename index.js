@@ -73,6 +73,8 @@ app.post("/login", async (req, res) => {
     console.log('/login navegador: ', req.headers['user-agent']);
     console.log('/login ip3: ', JSON.stringify(req.ip));
     const {correo, pass} = req.body;
+    const direccion_ip = JSON.stringify(req.ip);
+    const navegador = req.headers['user-agent'];
     //console.log(correo, pass);
 
     let validacion = true;
@@ -93,20 +95,36 @@ app.post("/login", async (req, res) => {
     const token = jwt.sign(correo, process.env.JWT_LLAVE);
 
     if (validacion) {
+        validacion2 = true;
         /// Buscar id de correo
         const id_correo = registro.rows.id;
         /// Eliminar logeo anterior
-        
+        try {
+            const borraLogeo = await borrarLogeoAnterior(id_correo);
+        } catch (error) {
+            console.log("Error /logeo al borrar el logeo anterior");
+            validacion2 = false;
+        };
 
         //// Guardar en bd tabla logeos el correo, token y datos ip y navegador
-        res.cookie("skate-aut", token, {
-            secure: false,
-            httpOnly: true,
-        });
-    } else {
-        
-    }
+        if (validacion2) {
+            try {
+                const registraLogeo = await registrarLogeo(id_correo, token, direccion_ip, navegador);
+            } catch (error) {
+                console.log("Error /logeo al registrar un nuevo logeo");
+                validacion2 = false;
+            };
+        };
 
+        if (validacion2) {
+            res.cookie("skate-aut", token, {
+                secure: false,
+                httpOnly: true,
+            });
+      
+        }
+        
+    } 
 
     //res.redirect("/perfil");
     res.status(201).send(
