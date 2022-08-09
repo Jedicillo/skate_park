@@ -6,7 +6,7 @@ const fu = require('express-fileupload');
 const { v4 } = require('uuid');
 const jwt = require('jsonwebtoken');
 const cp = require('cookie-parser');
-const { registrarUsuario, listarUsuarios, verificarUsuario, listarUsuario, borrarLogeoAnterior, buscarId_Correo, registrarLogeo } = require('./consultas.js');
+const { registrarUsuario, listarUsuarios, verificarUsuario, listarUsuario, borrarLogeoAnterior, buscarId_Correo, registrarLogeo, verificarLogeo } = require('./consultas.js');
 
 
 app.set("view engine", "handlebars");
@@ -170,6 +170,20 @@ app.get("/perfil", async (req, res) => {
 
     //// Aquí debería verificar con la BD que el token corresponda con el inicio de sesión
     /// Crear Función verificarTokenInicio(token)
+    let id_correo = 0;
+    let logeoVerificado = false;
+    try {
+        id_correo = await buscarId_Correo(correo)
+    } catch (error) {
+        console.log("Error al buscar el id_correo: ", error)
+    }
+
+    try {
+        console.log("id_correo: ", id_correo);
+        logeoVerificado = await verificarLogeo(id_correo);
+    } catch (error) {
+        console.log("Error al verificar el logeo en /Perfil: ", error);
+    }
 
     try {
         registro = await listarUsuario(correo);
@@ -181,7 +195,7 @@ app.get("/perfil", async (req, res) => {
 
     console.log('/perfil Autorizado: ', registro.rows.length);
 
-    if (registro.rows.length > 0) {
+    if (registro.rows.length > 0 && logeoVerificado) {
         var p_datos = {
             p_correo: correo,
             p_nombre: registro.rows.nombre,

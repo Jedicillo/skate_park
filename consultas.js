@@ -93,7 +93,7 @@ const buscarId_Correo = async (correo) => {
             values: [correo]
         };
         const resp = pool.query(config);
-        return resp;
+        return (await resp).rows[0].id;
     } catch (error) {
         console.log("Error al buscar el id_correo");
         return error;
@@ -115,4 +115,24 @@ const registrarLogeo = async (id_correo, token, navegador, direccion_ip) => {
     };
 };
 
-module.exports = { registrarUsuario, listarUsuarios, verificarUsuario, listarUsuario, borrarLogeoAnterior, buscarId_Correo, registrarLogeo }
+const verificarLogeo = async (id_correo, token) => {
+    console.log("Pasa por el verificarLogeo");
+    try {
+        const config = {
+            text: "Select * from public.logeos Where id_correo = $1;",
+            values: [id_correo]
+        };
+        const resp = pool.query(config);
+        if ((await resp).rows.token == token) {
+            respuesta = true;
+        } else {
+            respuesta = false;
+        }
+        return respuesta;
+    } catch (error) {
+        console.log("Error al verificar logeo en Consultas: ", error);
+        return error;
+    }
+}
+
+module.exports = { registrarUsuario, listarUsuarios, verificarUsuario, listarUsuario, borrarLogeoAnterior, buscarId_Correo, registrarLogeo, verificarLogeo }
