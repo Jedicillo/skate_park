@@ -1,5 +1,5 @@
 
-{{ this.autorizacion }}
+<!-- {{ this.autorizacion }} -->
 
 <div class="row">
   <div class="col-12 col-lg-6">
@@ -9,7 +9,7 @@
   </div>
   <div class="col-12 col-lg-6">
     <label for="txtNombre">Nombre</label>
-    <input class="form-control " id="txtNombre"  required/>
+    <input class="form-control " id="txtNombre" value="{{ this.datos.p_nombre}}" required/>
     <span id="faltaNombre" class="faltador">&nbsp;</span>
   </div>
   <div class="col-12 col-lg-6">
@@ -25,15 +25,15 @@
   </div>
   <div class="col-12  col-lg-6">
     <label for="txtExp">Años de experiencia</label>
-    <input class="form-control" id="txtExp"  required />
+    <input class="form-control" id="txtExp" value="{{ this.datos.p_experiencia }}" required />
     <span id="faltaExp" class="faltador">&nbsp;</span>
   </div>
   <div class="col-12 col-lg-6">
     <label for="txtEspec">Especialidad</label>
-    <input class="form-control m-auto" id="txtEspec" required />
+    <input class="form-control m-auto" id="txtEspec" value="{{ this.datos.p_especialidad }}" required />
     <span id="faltaEspec" class="faltador">&nbsp;</span>
   </div>
-  {{#unless perfil}}
+  <!--  -->
   <div class="col-12">
     <label for="fotoPerfil">Foto de perfil</label>
     <input type="file" id="fotoPerfil" /><br>
@@ -41,5 +41,5 @@
     <br>
   </div>
   <div class="col-12"><span id="faltaConsent" class="faltador">&nbsp;</span></div>
-  {{/unless}}
+  <!--{{#unless perfil }} {{/unless}} -->
 </div>

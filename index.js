@@ -198,8 +198,9 @@ app.get("/perfil", async (req, res) => {
     if (registro.rows.length > 0 && logeoVerificado) {
         var p_datos = {
             p_correo: correo,
-            p_nombre: registro.rows.nombre,
-            p_especialidad: registro.rows.especialidad
+            p_nombre: registro.rows[0].nombre,
+            p_experiencia: registro.rows[0].anos_experiencia,
+            p_especialidad: registro.rows[0].especialidad
             }
 
             res.render("perfil", {
